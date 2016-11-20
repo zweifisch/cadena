@@ -207,5 +207,8 @@ test('example', ({equal, end}) => {
           .limit(0, 10)
           .orderBy('score').desc().sql,
           "SELECT `name`, `id` FROM `players` WHERE `score` >= 90 LIMIT 0,10 ORDER BY `score` DESC")
+
+    equal(query("select * from tbl where id={id}", {id: '33b27b80-bee3-4d1b-aa9a-231bf250f344'}).sql,
+          "select * from tbl where id='33b27b80-bee3-4d1b-aa9a-231bf250f344'")
     end()
 })
