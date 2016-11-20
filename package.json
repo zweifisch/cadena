@@ -1,0 +1,38 @@
+{
+  "name": "cadena",
+  "version": "0.1.0",
+  "description": "sql builder",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "keywords": [
+    "sql"
+  ],
+  "author": "zf",
+  "license": "MIT",
+  "dependencies": {
+    "lodash.frompairs": "^4.0.1",
+    "lodash.topairs": "^4.3.0",
+    "lodash.trim": "^4.5.1",
+    "sqlstring": "^2.1.0"
+  },
+  "devDependencies": {
+    "tape": "^4.6.0"
+  },
+  "optionalDependencies": {
+    "mysql": "^2.11.1",
+    "sqlite3": "^3.1.6"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zweifisch/cadena.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zweifisch/cadena/issues"
+  },
+  "homepage": "https://github.com/zweifisch/cadena#readme"
+}
