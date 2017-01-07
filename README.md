@@ -2,6 +2,7 @@
 
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
+[![Node.js Version][node-version-image]][node-version-url]
 
 cadena helps you to write safer SQL
 
@@ -150,6 +151,11 @@ query("insert into tbl set {row} on duplicate key update {row}",
     {row: {id: 1, name: 'first'}})
 ```
 
+```js
+let row = {id: 1, name: 'first'}
+sql`insert into tbl set ${row} on duplicate key update ${row}"
+```
+
 ### mysql
 
 ```js
@@ -168,3 +174,5 @@ select().from('players').run(db)
 [npm-url]: https://npmjs.org/package/cadena
 [travis-image]: https://img.shields.io/travis/zweifisch/cadena.svg?style=flat
 [travis-url]: https://travis-ci.org/zweifisch/cadena
+[node-version-image]: https://img.shields.io/node/v/cadena.svg
+[node-version-url]: https://nodejs.org/en/download/

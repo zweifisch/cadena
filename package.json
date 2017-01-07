@@ -1,6 +1,6 @@
 {
   "name": "cadena",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "sql builder",
   "main": "index.js",
   "scripts": {
