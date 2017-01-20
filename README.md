@@ -17,7 +17,7 @@ npm install --save cadena
 ```
 
 ```js
-const { select, connect, query } = require('cadena')
+const { select, connect, query, sql } = require('cadena')
 const db = connect('mysql', 'mysql://guest:guest@127.0.0.1/test')
 
 select('name', 'id')
@@ -29,9 +29,10 @@ select('name', 'id')
 // just get SQL as string
 select().from('players').toString()
 
-query("select * from tbl where id={id}", {
-    id: '33b27b80-bee3-4d1b-aa9a-231bf250f344'
-})
+let id = '33b27b80-bee3-4d1b-aa9a-231bf250f344'
+sql`select * from tbl where id={id}`.run(db)
+
+sql`select * from tbl where id={id}`.toString()
 // select * from tbl where id='33b27b80-bee3-4d1b-aa9a-231bf250f344'
 ```
 
@@ -147,13 +148,10 @@ del('players').where({name: {contains: 'alberto'}}).limit(1)
 ### parameterized query
 
 ```js
-query("insert into tbl set {row} on duplicate key update {row}",
-    {row: {id: 1, name: 'first'}})
-```
-
-```js
-let row = {id: 1, name: 'first'}
-sql`insert into tbl set ${row} on duplicate key update ${row}"
+const { sql } = require('cadena')
+let name = 'first'
+let id = 1
+sql`insert into tbl set name=${name} where id=${id}`.run(db)
 ```
 
 ### mysql

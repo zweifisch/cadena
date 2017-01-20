@@ -1,8 +1,7 @@
 const test = require('tape')
 const cadena = require('./index')
-const Template = require('./lib/template')
 
-const { select, update, query, upsert, create, insert, del, desc, and, or } = cadena
+const { select, update, query, upsert, create, insert, del, desc, and, or, sql } = cadena
 
 
 test('select *', ({equal, end}) => {
@@ -151,16 +150,14 @@ test('upsert', ({equal, end}) => {
     end()
 })
 
-test('template', ({equal, end}) => {
-    let t = new Template("{key} = {value}")
-    equal(t.render({key: "value", value: "key"}), "value = key")
-    end()
-})
-
-test('query', ({equal, end}) => {
+test('prepare', ({equal, deepEqual, end}) => {
+    let values = {id: 1, name: 'first'}
     equal("insert into tbl set `id` = 1, `name` = 'first' on duplicate key update `id` = 1, `name` = 'first'",
-          query("insert into tbl set {values} on duplicate key update {values}",
-                {values: {id: 1, name: 'first'}}).sql)
+          sql`insert into tbl set ${values} on duplicate key update ${values}`.sql)
+
+    deepEqual(["insert into tbl set `id` = ?, `name` = ? on duplicate key update `id` = ?, `name` = ?",
+           [1, 'first', 1, 'first']],
+          sql`insert into tbl set ${values} on duplicate key update ${values}`.prepare())
     end()
 })
 
@@ -178,7 +175,7 @@ test('table', ({equal, end}) => {
 })
 
 const testDB = (db, {deepEqual, end}) => {
-    return query("drop table if exists users").run(db)
+    return sql`drop table if exists users`.run(db)
         .then(() => create('users').int('id').primary().varchar('name', 64).run(db))
         .then(() => insert({id: 1, name: 'foo'}).into('users').run(db))
         .then(() => select().from('users').getOne(db))
@@ -186,6 +183,14 @@ const testDB = (db, {deepEqual, end}) => {
         .then(() => insert(['id', 'name'], [[2, 'bar'], [3, 'foobar']]).into('users').run(db))
         .then(() => select().from('users').limit(1).getAll(db))
         .then(row => deepEqual(row, [{id: 1, name: 'foo'}]))
+        .then(() => sql`insert into users (id, name) values(${4}, ${'four'})`.run(db))
+        .then(() => select().from('users').limit(1).orderBy('id').desc().getOne(db))
+        .then(row => deepEqual(row, {id: 4, name: 'four'}))
+        .then(() => sql`select * from users where name=${'bar'}`.getOne(db))
+        .then(row => deepEqual(row, {id: 2, name: 'bar'}))
+        .then(() => sql`update users set ${{name: 'five'}} where id=${4}`.run(db))
+        .then(() => sql`select name from users where id=${4}`.getOne(db))
+        .then(row => deepEqual(row, {name: 'five'}))
 }
 
 test('sqlite3', (t) => {
@@ -207,8 +212,8 @@ test('example', ({equal, end}) => {
           .limit(0, 10)
           .orderBy('score').desc().sql,
           "SELECT `name`, `id` FROM `players` WHERE `score` >= 90 ORDER BY `score` DESC LIMIT 0,10")
-
-    equal(query("select * from tbl where id={id}", {id: '33b27b80-bee3-4d1b-aa9a-231bf250f344'}).sql,
+    let id = '33b27b80-bee3-4d1b-aa9a-231bf250f344'
+    equal(sql`select * from tbl where id=${id}`.toString(),
           "select * from tbl where id='33b27b80-bee3-4d1b-aa9a-231bf250f344'")
     end()
 })
