@@ -21,7 +21,7 @@ exports.del = (table) => (new Delete()).delete(table)
 
 exports.upsert = (table, row) => {
     let expanded = escape(row)
-    let sql = ['INSERT INTO', table, 'SET',  expanded, 'ON DUPLICATE KEY UPDATE', expanded].join(' ')
+    let sql = ['INSERT INTO', table, 'SET', expanded, 'ON DUPLICATE KEY UPDATE', expanded].join(' ')
     return new Prepare([sql])
 }
 

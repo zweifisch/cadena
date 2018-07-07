@@ -30,9 +30,9 @@ select('name', 'id')
 select().from('players').toString()
 
 let id = '33b27b80-bee3-4d1b-aa9a-231bf250f344'
-sql`select * from tbl where id={id}`.run(db)
+sql`select * from tbl where id=${id}`.run(db)
 
-sql`select * from tbl where id={id}`.toString()
+sql`select * from tbl where id=${id}`.toString()
 // select * from tbl where id='33b27b80-bee3-4d1b-aa9a-231bf250f344'
 ```
 
@@ -94,7 +94,7 @@ orderBy('field1', 'field2') // ORDER BY `field1`, `field2`
 orderBy(['field1', 'field2']) // ORDER BY `field1`, `field2`
 orderBy(['-field1', 'field2']) // ORDER BY `field1` DESC, `field2`
 
-orderBy('field1', 'asc', 'field2', 'desc') // ORDER BY `field1` ASC, `field2` DESC
+orderBy('field1', 'ASC', 'field2', 'DESC') // ORDER BY `field1` ASC, `field2` DESC
 
 orderBy('field1').desc().orderBy('field2').asc() // ORDER BY `field1` DESC, `field2` ASC
 ```
@@ -110,6 +110,13 @@ select('name', 'id').from('tbl').leftJoin('tbl2').on({tbl.id: "tbl2.tblId"})
 ```js
 let tbl = select('name', 'id').from('tbl')
 select().from(tbl) // SELECT * FROM (SELECT `name`, `id` FROM `tbl`)
+```
+
+### count
+
+```js
+let query = select().from('tbl').where({key: value}).orderBy('created_at').desc()
+query.count().sql // SELECT COUNT(*) AS `total` FROM `tbl` WHERE `key` = 'value'
 ```
 
 ### insert

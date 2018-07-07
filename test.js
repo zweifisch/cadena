@@ -21,6 +21,13 @@ test('select fields', ({equal, end}) => {
     end()
 })
 
+test('count', ({equal, end}) => {
+    let query = select().from('tbl').where({key: 'value'}).orderBy('created_at').desc()
+    equal(query.count().sql,
+          "SELECT COUNT(*) AS `total` FROM `tbl` WHERE `key` = 'value'")
+    end()
+})
+
 test('criteria general', ({equal, end}) => {
     equal(select().from('tbl').where({id: 9}).sql,
           'SELECT * FROM `tbl` WHERE `id` = 9')
