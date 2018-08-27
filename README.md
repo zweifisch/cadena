@@ -8,7 +8,7 @@ cadena helps you to write safer SQL
 
 - supports parameterized query
 - `run()` returns promise
-- supports mysql and and sqlite3
+- supports mysql, sqlite3 and rqlite
 
 ## usage
 
@@ -161,18 +161,24 @@ let id = 1
 sql`insert into tbl set name=${name} where id=${id}`.run(db)
 ```
 
-### mysql
+### database intergration
+
+mysql
 
 ```js
 const db = cadena.connect('mysql', 'mysql://root:@127.0.0.1/test')
-select().from('players').run(db)
 ```
 
-### sqlite3
+sqlite3
 
 ```js
 const db = cadena.connect('sqlite3', ':memory:')
-select().from('players').run(db)
+```
+
+rqlite
+
+```js
+const db = cadena.connect('rqlite', 'http://127.0.0.1:4001')
 ```
 
 [npm-image]: https://img.shields.io/npm/v/cadena.svg?style=flat

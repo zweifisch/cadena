@@ -28,7 +28,8 @@ exports.upsert = (table, row) => {
 
 const sqlite3 = require("./lib/sqlite3")
 const mysql = require("./lib/mysql")
-const adapters = fromPairs([sqlite3, mysql].map(({Adapter, flavor}) => [flavor, Adapter]))
+const rqlite = require("./lib/rqlite")
+const adapters = fromPairs([sqlite3, mysql, rqlite].map(({Adapter, flavor}) => [flavor, Adapter]))
 
 exports.connect = (flavor, url) => {
     assert(flavor in adapters, `Unsupported flavor ${flavor}`)

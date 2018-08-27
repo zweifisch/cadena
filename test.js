@@ -212,6 +212,12 @@ test('mysql', (t) => {
     testDB(db, t).then(end, end)
 })
 
+test('rqlite', (t) => {
+    let db = cadena.connect('rqlite', 'http://127.0.0.1:4001')
+    let end = (x) => db.end().then(t.end(x))
+    testDB(db, t).then(end, end)
+})
+
 test('example', ({equal, end}) => {
     equal(select('name', 'id')
           .from('players')

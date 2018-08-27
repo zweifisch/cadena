@@ -5,3 +5,6 @@ services:
   - mysql
 before_install:
   - mysql -e "create database IF NOT EXISTS test;" -uroot
+  - wget https://github.com/rqlite/rqlite/releases/download/v4.3.0/rqlite-v4.3.0-linux-amd64.tar.gz
+  - tar xzf rqlite-v4.3.0-linux-amd64.tar.gz
+  - ./rqlite-v4.3.0-linux-amd64/rqlited ./node.1 &

@@ -4,7 +4,8 @@
   "description": "sql builder",
   "main": "index.js",
   "scripts": {
-    "test": "node test"
+    "test": "node test",
+    "release": "standard-version"
   },
   "keywords": [
     "sql"
@@ -18,11 +19,13 @@
     "sqlstring": "^2.1.0"
   },
   "devDependencies": {
+    "standard-version": "^4.4.0",
     "tape": "^4.6.0"
   },
   "optionalDependencies": {
     "mysql": "^2.11.1",
-    "sqlite3": "^3.1.6"
+    "rqlite-client": "^0.1.1",
+    "sqlite3": "^4.0.2"
   },
   "engines": {
     "node": ">=6.0.0"
