@@ -145,6 +145,7 @@ test('delete', ({equal, end}) => {
 
 test('insert', ({equal, end}) => {
     equal(insert({key: "value"}).into('tbl').sql, `INSERT INTO tbl (key) VALUES ('value')`)
+    equal(insert({key: '{"key": "value"}'}).into('tbl').sql, `INSERT INTO tbl (key) VALUES ('{\\"key\\": \\"value\\"}')`)
     equal(insert(['name', 'score'], [['foo', 1], ['bar', 2]]).into('tbl').sql,
           `INSERT INTO tbl (name, score) VALUES ('foo', 1),
 ('bar', 2)`)

@@ -1578,9 +1578,9 @@ rimraf@^2.6.1:
   dependencies:
     glob "^7.0.5"
 
-rqlite-client@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/rqlite-client/-/rqlite-client-0.1.1.tgz#a30dc937ca8e0fd18206021bee4341850939a425"
+rqlite-client@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/rqlite-client/-/rqlite-client-1.0.0.tgz#2b91ac6e673b6aad7c700568990b41d64fc90c96"
   dependencies:
     debug "^3.1.0"
     node-fetch "^2.2.0"

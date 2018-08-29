@@ -24,11 +24,11 @@
   },
   "optionalDependencies": {
     "mysql": "^2.11.1",
-    "rqlite-client": "^0.1.1",
+    "rqlite-client": "^1.0.0",
     "sqlite3": "^4.0.2"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.6.0"
   },
   "repository": {
     "type": "git",
