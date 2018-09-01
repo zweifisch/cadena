@@ -173,10 +173,12 @@ test('table', ({equal, end}) => {
     let expected = `CREATE TABLE IF NOT EXISTS users
 (\`id\` INT PRIMARY KEY,
 \`name\` VARCHAR(50),
+\`enabled\` INT(1),
 \`age\` INT)`
     equal(create('users')
           .int('id').primary()
           .varchar('name', 50)
+          .int('enabled', 1)
           .int('age').sql
           , expected)
     end()
@@ -184,19 +186,19 @@ test('table', ({equal, end}) => {
 
 const testDB = (db, {deepEqual, end}) => {
     return sql`drop table if exists users`.run(db)
-        .then(() => create('users').int('id').primary().varchar('name', 64).run(db))
-        .then(() => insert({id: 1, name: 'foo'}).into('users').run(db))
+        .then(() => create('users').int('id').primary().int('enabled', 1).varchar('name', 64).run(db))
+        .then(() => insert({id: 1, name: 'foo', enabled: false}).into('users').run(db))
         .then(() => select().from('users').getOne(db))
-        .then(row => deepEqual(row, {id: 1, name: 'foo'}))
+        .then(row => deepEqual(row, {id: 1, name: 'foo', enabled: 0}))
         .then(() => insert(['id', 'name'], [[2, 'bar'], [3, 'foobar']]).into('users').run(db))
         .then(() => select().from('users').limit(1).getAll(db))
-        .then(row => deepEqual(row, [{id: 1, name: 'foo'}]))
-        .then(() => sql`insert into users (id, name) values(${4}, ${'four'})`.run(db))
+        .then(row => deepEqual(row, [{id: 1, name: 'foo', enabled: 0}]))
+        .then(() => sql`insert into users (id, name, enabled) values(${4}, ${'four'}, ${false})`.run(db))
         .then(() => select().from('users').limit(1).orderBy('id').desc().getOne(db))
-        .then(row => deepEqual(row, {id: 4, name: 'four'}))
+        .then(row => deepEqual(row, {id: 4, name: 'four', enabled: 0}))
         .then(() => sql`select * from users where name=${'bar'}`.getOne(db))
-        .then(row => deepEqual(row, {id: 2, name: 'bar'}))
-        .then(() => sql`update users set ${{name: 'five'}} where id=${4}`.run(db))
+        .then(row => deepEqual(row, {id: 2, name: 'bar', enabled: null}))
+        .then(() => sql`update users set ${{name: 'five', enabled: true}} where id=${4}`.run(db))
         .then(() => sql`select name from users where id=${4}`.getOne(db))
         .then(row => deepEqual(row, {name: 'five'}))
 }

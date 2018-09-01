@@ -5,7 +5,8 @@ const { Insert } = require('./lib/insert')
 const { Update } = require('./lib/update')
 const { Delete } = require('./lib/delete')
 const { Prepare } = require('./lib/prepare')
-const { fromPairs, escape } = require('./lib/util')
+const { fromPairs } = require('./lib/util')
+const { escape } = require('sqlstring')
 
 
 exports.create = (table) => (new Schema()).table(table)
@@ -26,9 +27,9 @@ exports.upsert = (table, row) => {
 }
 
 
-const sqlite3 = require("./lib/sqlite3")
-const mysql = require("./lib/mysql")
-const rqlite = require("./lib/rqlite")
+const sqlite3 = require("./lib/adapters/sqlite3")
+const mysql = require("./lib/adapters/mysql")
+const rqlite = require("./lib/adapters/rqlite")
 const adapters = fromPairs([sqlite3, mysql, rqlite].map(({Adapter, flavor}) => [flavor, Adapter]))
 
 exports.connect = (flavor, url) => {
