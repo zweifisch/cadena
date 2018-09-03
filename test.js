@@ -174,33 +174,39 @@ test('table', ({equal, end}) => {
 (\`id\` INT PRIMARY KEY,
 \`name\` VARCHAR(50),
 \`enabled\` INT(1),
+\`avatar\` BLOB,
 \`age\` INT)`
     equal(create('users')
           .int('id').primary()
           .varchar('name', 50)
           .int('enabled', 1)
+          .blob('avatar')
           .int('age').sql
           , expected)
     end()
 })
 
-const testDB = (db, {deepEqual, end}) => {
+const testDB = (db, {deepEqual, ok, end}) => {
     return sql`drop table if exists users`.run(db)
-        .then(() => create('users').int('id').primary().int('enabled', 1).varchar('name', 64).run(db))
+        .then(() => create('users').int('id').primary().int('enabled', 1).blob('avatar').varchar('name', 64).run(db))
         .then(() => insert({id: 1, name: 'foo', enabled: false}).into('users').run(db))
         .then(() => select().from('users').getOne(db))
-        .then(row => deepEqual(row, {id: 1, name: 'foo', enabled: 0}))
+        .then(row => deepEqual(row, {id: 1, name: 'foo', enabled: 0, avatar: null}))
         .then(() => insert(['id', 'name'], [[2, 'bar'], [3, 'foobar']]).into('users').run(db))
         .then(() => select().from('users').limit(1).getAll(db))
-        .then(row => deepEqual(row, [{id: 1, name: 'foo', enabled: 0}]))
+        .then(row => deepEqual(row, [{id: 1, name: 'foo', enabled: 0, avatar: null}]))
         .then(() => sql`insert into users (id, name, enabled) values(${4}, ${'four'}, ${false})`.run(db))
         .then(() => select().from('users').limit(1).orderBy('id').desc().getOne(db))
-        .then(row => deepEqual(row, {id: 4, name: 'four', enabled: 0}))
+        .then(row => deepEqual(row, {id: 4, name: 'four', enabled: 0, avatar: null}))
         .then(() => sql`select * from users where name=${'bar'}`.getOne(db))
-        .then(row => deepEqual(row, {id: 2, name: 'bar', enabled: null}))
+        .then(row => deepEqual(row, {id: 2, name: 'bar', enabled: null, avatar: null}))
         .then(() => sql`update users set ${{name: 'five', enabled: true}} where id=${4}`.run(db))
-        .then(() => sql`select name from users where id=${4}`.getOne(db))
-        .then(row => deepEqual(row, {name: 'five'}))
+        .then(() => sql`select name, enabled from users where id=${4}`.getOne(db))
+        .then(row => deepEqual(row, {name: 'five', enabled: 1}))
+        .then(() => sql`update users set ${{avatar: Buffer.from('avatar')}} where id=${4}`.run(db))
+        .then(() => sql`select avatar from users where id=${4}`.getOne(db))
+        .then(row => ok(typeof row.avatar === 'string' && row.avatar === Buffer.from('avatar').toString('base64')
+                        || Buffer.compare(row.avatar, Buffer.from('avatar')) === 0 ))
 }
 
 test('sqlite3', (t) => {
